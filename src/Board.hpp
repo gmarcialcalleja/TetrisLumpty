@@ -3,7 +3,9 @@
 #include "Tetromino.hpp"
 #include "ShapeDatabase.hpp"
 #include <memory>
+#include <algorithm>
 #include <array>
+#include <unordered_set>
 class Board {
 private:
     std::vector<std::vector<ShapeType>> board = std::vector(20, std::vector<ShapeType>(10, ShapeType::Empty));
@@ -16,9 +18,42 @@ public:
     bool isValid(int y_next, int x_next);
     bool isMoveValid(const std::array<std::pair<int, int>, 4>& matrix, const std::pair<int,int> position, std::string move);
     bool isCWValid(const std::array<std::pair<int, int>, 4>& TetrisMatrix, const std::pair<int,int>& position);
+    void clear_if_fill(int x_pos, const std::array<std::pair<int, int>, 4>& TetrisMatrix);
+    void clear_rows(const std::vector<int>& rows);
+    void shift_lines_down(int min, int max, int size);
 };
 
 //--------------------------------------------------------------------------------------------------------
+void Board::clear_if_fill(int x_pos, const std::array<std::pair<int, int>, 4>& TetrisMatrix) {
+    auto isFilled = [&](int x) ->bool {
+        for(const auto& shape : board.at(x)) //js checks a whole row
+            if(shape == ShapeType::Empty) return false;
+        return true;
+    };
+    std::unordered_set<int> visited;
+    std::vector<int> filled_positions;
+    for(const auto& [x_shape, y_shape] : TetrisMatrix ) {
+        int final_x = x_pos + x_shape;
+        if(!visited.count(final_x)) {
+            if(isFilled(final_x)) 
+                filled_positions.push_back(final_x);
+            
+            visited.insert(final_x);
+        }
+    }
+    std::sort(filled_positions.begin(), filled_positions.end());
+    clear_rows(filled_positions);
+}
+
+void Board::clear_rows(const std::vector<int>& rows) {
+    for(const int& x : rows) {
+        for(int i = x; i > 0; i--) 
+            board.at(i) = board.at(i-1);
+        for(auto& shape : board.at(0)) 
+            shape = ShapeType::Empty; 
+    }
+
+}
 
 bool Board::isDropValid(const std::array<std::pair<int, int>, 4>& matrix, const std::pair<int,int> position) {
     for(const auto& [first, second] : matrix) {

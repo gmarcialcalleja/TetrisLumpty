@@ -55,10 +55,8 @@ void Game::tick() {
         piece->down(); // execute
     } else {
         board.lock(piece);
-        //if (board.clear(piece->getPosition().first)){
-        //    board.clear_line();
-        //}
-        //check for a line clear
+        board.clear_if_fill(piece->getPosition().first, TetrisMatrix);
+
         // if there is a line clear then in the board array, we want to like
         // clear the vector where the line is, then js move everything down 1
         piece->default_state();
@@ -69,16 +67,6 @@ void Game::tick() {
 void Game::printBoard() {
     auto Board_copy = board.getBoardCopy();
     std::cout << Board_copy.at(0).size() << std::endl;
-    // auto TetrisMatrix = getPieceMatrix();
-    // for(const auto& [y, x]: TetrisMatrix) {
-    //     Board_copy.at(y + piece->getPosition().first).at(x+piece->getPosition().second) = piece->getType();
-    // }
-    // for(int y = 0; y < board.num_rows(); y++) {
-    //     for(int x = 0; x < board.num_cols(); x++) {
-    //         std::cout << static_cast<int>(Board_copy.at(y).at(x)) << " ";
-    //     }
-    //     std::cout << std::endl;
-    // }
 }
 
 void Game::move(std::string move) {
