@@ -2,49 +2,58 @@
 #include "Tetromino.hpp"
 #include <random>
 #include <memory>
-#include <queue>
+#include <stack>
 #include <vector>
 class TetrisFactory {
 private:
-    std::queue<std::shared_ptr<Tetromino>> q;
+    std::stack<std::shared_ptr<Tetromino>> stack;
     std::vector<std::shared_ptr<Tetromino>> vec;
     int size;
+    std::shared_ptr<Tetromino> held_piece;
 public:
     TetrisFactory();
-    void fill_queue();
-    bool isEmpty() {return q.empty();}
+    void fill_stack();
+    bool isEmpty() {return stack.empty();}
     std::shared_ptr<Tetromino> load_next_piece();
+    void hold(std::shared_ptr<Tetromino> piece);
+    std::shared_ptr<Tetromino> top() {return stack.top();}
+    const std::shared_ptr<Tetromino>& show_held_piece() {return held_piece;}
 };
 
 //------------------------------------------------------------------------------------------------
+void TetrisFactory::hold(std::shared_ptr<Tetromino> piece) {
+    if(held_piece) stack.push(held_piece);;
+    held_piece = piece;
+}
+
+
+
 TetrisFactory::TetrisFactory() {
-    //somehow randomize/ scramble different permutations 
-    //hash set and insert into a queue;
     size = 7;
     vec.push_back(nullptr);
     for(int i = 1; i <= size; i++) {
         vec.push_back(std::make_shared<Tetromino>(Tetromino(i)));
     }
-    fill_queue();
+    fill_stack();
     
 }
-void TetrisFactory::fill_queue() {
+void TetrisFactory::fill_stack() {
     // create the set
-    if(q.size() == size) return;
+    if(stack.size() == size) return;
     std::vector<int> set(size+1);
     std::random_device rd;  
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> distrib(1, size);//make sure to remember to change this
-    while(q.size() < size) {
+    while(stack.size() < size) {
         int type = distrib(gen);
         if(set.at(type)) continue;
-        q.push(vec.at(type));
+        stack.push(vec.at(type));
         set.at(type) = 1;
     }
 }
 
 std::shared_ptr<Tetromino> TetrisFactory::load_next_piece() {
-    std::shared_ptr<Tetromino> piece = q.front();
-    q.pop();
+    std::shared_ptr<Tetromino> piece = stack.top();
+    stack.pop();
     return piece;
 }

@@ -24,6 +24,9 @@ int main()
 				if (key->code == sf::Keyboard::Key::Right) game.move("right");
 				if (key->code == sf::Keyboard::Key::Up)    game.rotateClockwise();
 				if (key->code == sf::Keyboard::Key::Down)  game.tick();
+				if (key->code == sf::Keyboard::Key::LShift)  game.hold();
+				if (key->code == sf::Keyboard::Key::Space)  game.drop();
+
 			}//
 			
 		}
@@ -33,6 +36,7 @@ int main()
 		}
 		window.clear(sf::Color::Black);
 		game.renderBoard(window,shape);
+		game.renderHold(window,shape);
 		window.display();
 	}
 }
