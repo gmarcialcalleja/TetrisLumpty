@@ -18,6 +18,7 @@ public:
     void hold(std::shared_ptr<Tetromino> piece);
     std::shared_ptr<Tetromino> top() {return stack.top();}
     const std::shared_ptr<Tetromino>& show_held_piece() {return held_piece;}
+    
 };
 
 //------------------------------------------------------------------------------------------------

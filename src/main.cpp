@@ -12,6 +12,7 @@ int main()
 	Game game;
 	sf::Clock clk;
 	clk.restart();
+	
 	while ( window.isOpen())
 	{
 		sf::Time elapsed = clk.getElapsedTime();
@@ -26,11 +27,10 @@ int main()
 				if (key->code == sf::Keyboard::Key::Down)  game.tick();
 				if (key->code == sf::Keyboard::Key::LShift)  game.hold();
 				if (key->code == sf::Keyboard::Key::Space)  game.drop();
-
 			}//
 			
 		}
-		if(time > 715000) {
+		if(time > game.getTickSpeed()) {
 			game.tick();
 			clk.restart();
 		}

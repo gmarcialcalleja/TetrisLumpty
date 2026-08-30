@@ -15,14 +15,22 @@ private:
     TetrisFactory factory;
     std::shared_ptr<Tetromino> piece;
     bool alreadyHeld;
+    int level;
+    int score;
     std::vector<sf::Color> colors{
         sf::Color::Transparent, sf::Color::Red, sf::Color::Yellow, sf::Color::Cyan,
         sf::Color::White, sf::Color::Blue, sf::Color::Magenta, sf::Color::Green
     };//
+    const std::array<int32_t, 30> levels_array{ 
+        798684, 715488, 632292, 549096, 465899, 382703, 299507, 216310, 
+        133114, 99836, 83196, 83196, 83196, 66557, 66557, 66557, 49918, 49918, 49918, 
+        33279, 33279, 33279, 33279, 33279, 33279, 33279, 33279, 33279, 33279, 16639    
+    };
 public:
-    Game() : factory(), piece(factory.load_next_piece()), alreadyHeld(false) {}
+    Game() : factory(), piece(factory.load_next_piece()), alreadyHeld(false), level(10), score(0) {}
     const std::array<std::pair<int, int>, 4>& getPieceMatrix();
     void tick();
+    int32_t getTickSpeed() {return levels_array.at(level);}
     void printBoard();
     void renderBoard(sf::RenderWindow& window, sf::RectangleShape& shape);
     void move(std::string move);
@@ -88,8 +96,18 @@ void Game::hold() {
 }
 
 void Game::drop() {
+    auto TetrisMatrix = getPieceMatrix();
     while(board.isDropValid(TetrisMatrix, piece->getPosition()))
         piece->down(); // execute
+    board.lock(piece);
+    board.clear_if_fill(piece->getPosition().first, TetrisMatrix);
+
+    // if there is a line clear then in the board array, we want to like
+    // clear the vector where the line is, then js move everything down 1
+    piece->default_state();
+    if(factory.isEmpty()) factory.fill_stack();
+    piece = factory.load_next_piece();
+    alreadyHeld = false;
     
 }
 void Game::tick() {
@@ -99,10 +117,13 @@ void Game::tick() {
         piece->down(); // execute
     } else {
         board.lock(piece);
-        board.clear_if_fill(piece->getPosition().first, TetrisMatrix);
+        int num_cleared = board.clear_if_fill(piece->getPosition().first, TetrisMatrix);
+        if(num_cleared = 1) score += 100;
+        if(num_cleared = 2) score += 300;
+        if(num_cleared = 3) score += 500;
+        if(num_cleared = 4) score += 800;
 
-        // if there is a line clear then in the board array, we want to like
-        // clear the vector where the line is, then js move everything down 1
+
         piece->default_state();
         if(factory.isEmpty()) factory.fill_stack();
         piece = factory.load_next_piece();

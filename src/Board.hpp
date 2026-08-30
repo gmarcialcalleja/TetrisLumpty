@@ -18,13 +18,13 @@ public:
     bool isValid(int y_next, int x_next);
     bool isMoveValid(const std::array<std::pair<int, int>, 4>& matrix, const std::pair<int,int> position, std::string move);
     bool isCWValid(const std::array<std::pair<int, int>, 4>& TetrisMatrix, const std::pair<int,int>& position);
-    void clear_if_fill(int x_pos, const std::array<std::pair<int, int>, 4>& TetrisMatrix);
+    int clear_if_fill(int x_pos, const std::array<std::pair<int, int>, 4>& TetrisMatrix);
     void clear_rows(const std::vector<int>& rows);
     void shift_lines_down(int min, int max, int size);
 };
 
 //--------------------------------------------------------------------------------------------------------
-void Board::clear_if_fill(int x_pos, const std::array<std::pair<int, int>, 4>& TetrisMatrix) {
+int Board::clear_if_fill(int x_pos, const std::array<std::pair<int, int>, 4>& TetrisMatrix) {
     auto isFilled = [&](int x) ->bool {
         for(const auto& shape : board.at(x)) //js checks a whole row
             if(shape == ShapeType::Empty) return false;
@@ -43,6 +43,7 @@ void Board::clear_if_fill(int x_pos, const std::array<std::pair<int, int>, 4>& T
     }
     std::sort(filled_positions.begin(), filled_positions.end());
     clear_rows(filled_positions);
+    return filled_positions.size();
 }
 
 void Board::clear_rows(const std::vector<int>& rows) {
