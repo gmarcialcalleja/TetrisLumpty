@@ -2,14 +2,26 @@
 #include <vector>
 #include "Tetromino.hpp"
 #include "ShapeDatabase.hpp"
+#include "IObserver.hpp"
+#include "Subject.hpp"
 #include <memory>
 #include <algorithm>
 #include <array>
 #include <unordered_set>
-class Board {
+#pragma once
+#include "IObserver.hpp"
+#include <memory>
+
+class Board : public Subject{ 
 private:
     std::vector<std::vector<ShapeType>> board = std::vector(20, std::vector<ShapeType>(10, ShapeType::Empty));
+    std::vector<IObserver*> observer_vector;
 public:
+    //Subject stuff
+    void notify(int numLines) override {for(const auto& observer_ptr : observer_vector) observer_ptr->onNotify(numLines);}
+    void attach_observer(IObserver* observer) override {observer_vector.push_back(observer);}
+    void detach_observer(IObserver* observer) override {std::erase(observer_vector, observer);}
+
     std::vector<std::vector<ShapeType>> getBoardCopy() {return board;}
     int num_rows() {return static_cast<int>(board.size());}
     int num_cols() {return static_cast<int>(board.at(0).size());}
@@ -18,13 +30,16 @@ public:
     bool isValid(int y_next, int x_next);
     bool isMoveValid(const std::array<std::pair<int, int>, 4>& matrix, const std::pair<int,int> position, std::string move);
     bool isCWValid(const std::array<std::pair<int, int>, 4>& TetrisMatrix, const std::pair<int,int>& position);
-    int clear_if_fill(int x_pos, const std::array<std::pair<int, int>, 4>& TetrisMatrix);
+    void clear_if_fill(int x_pos, const std::array<std::pair<int, int>, 4>& TetrisMatrix);
     void clear_rows(const std::vector<int>& rows);
     void shift_lines_down(int min, int max, int size);
+
+    
+    
 };
 
 //--------------------------------------------------------------------------------------------------------
-int Board::clear_if_fill(int x_pos, const std::array<std::pair<int, int>, 4>& TetrisMatrix) {
+void Board::clear_if_fill(int x_pos, const std::array<std::pair<int, int>, 4>& TetrisMatrix) {
     auto isFilled = [&](int x) ->bool {
         for(const auto& shape : board.at(x)) //js checks a whole row
             if(shape == ShapeType::Empty) return false;
@@ -43,7 +58,7 @@ int Board::clear_if_fill(int x_pos, const std::array<std::pair<int, int>, 4>& Te
     }
     std::sort(filled_positions.begin(), filled_positions.end());
     clear_rows(filled_positions);
-    return filled_positions.size();
+    if(filled_positions.size()) notify(static_cast<int>(filled_positions.size()));
 }
 
 void Board::clear_rows(const std::vector<int>& rows) {

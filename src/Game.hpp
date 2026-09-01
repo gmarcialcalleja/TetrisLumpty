@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include "ShapeDatabase.hpp"
 #include "Board.hpp"
+#include "ScoreTracker.hpp"
 #include "Tetromino.hpp"
 #include "Factory.hpp"
 
@@ -16,7 +17,7 @@ private:
     std::shared_ptr<Tetromino> piece;
     bool alreadyHeld;
     int level;
-    int score;
+    ScoreTracker score;
     std::vector<sf::Color> colors{
         sf::Color::Transparent, sf::Color::Red, sf::Color::Yellow, sf::Color::Cyan,
         sf::Color::White, sf::Color::Blue, sf::Color::Magenta, sf::Color::Green
@@ -27,7 +28,9 @@ private:
         33279, 33279, 33279, 33279, 33279, 33279, 33279, 33279, 33279, 33279, 16639    
     };
 public:
-    Game() : factory(), piece(factory.load_next_piece()), alreadyHeld(false), level(10), score(0) {}
+    Game() : factory(), piece(factory.load_next_piece()), alreadyHeld(false), level(0) {
+        board.attach_observer(&score);
+    }
     const std::array<std::pair<int, int>, 4>& getPieceMatrix();
     void tick();
     int32_t getTickSpeed() {return levels_array.at(level);}
@@ -38,6 +41,8 @@ public:
     void hold();
     void drop();
     void renderHold(sf::RenderWindow& window, sf::RectangleShape& shape) ;
+    // add member variables of Concrete Observors
+    // add a getscore ig to call in main and render
 };
 //--------------------------------------------------------------------------------------------------
 
@@ -117,11 +122,8 @@ void Game::tick() {
         piece->down(); // execute
     } else {
         board.lock(piece);
-        int num_cleared = board.clear_if_fill(piece->getPosition().first, TetrisMatrix);
-        if(num_cleared = 1) score += 100;
-        if(num_cleared = 2) score += 300;
-        if(num_cleared = 3) score += 500;
-        if(num_cleared = 4) score += 800;
+        board.clear_if_fill(piece->getPosition().first, TetrisMatrix);
+        
 
 
         piece->default_state();
