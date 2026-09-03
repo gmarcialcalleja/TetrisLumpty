@@ -1,3 +1,4 @@
+#pragma once
 #include <vector>
 #include <array>
 #include <iostream>
@@ -19,6 +20,7 @@ private:
     int level;
     sf::RectangleShape shape;
     ScoreTracker score;
+    bool end;
     std::vector<sf::Color> colors{
         sf::Color::Transparent, sf::Color::Red, sf::Color::Yellow, sf::Color::Cyan,
         sf::Color::White, sf::Color::Blue, sf::Color::Magenta, sf::Color::Green
@@ -43,6 +45,7 @@ public:
     void move(std::string move);
     void rotateClockwise();
     void hold();
+    bool isOver() {return end;}
     void drop();
     void renderHold(sf::RenderWindow& window) ;
     // add member variables of Concrete Observors
@@ -125,10 +128,12 @@ void Game::tick() {
     if(board.isDropValid(TetrisMatrix, piece->getPosition())) {
         piece->down(); // execute
     } else {
+        if(piece->getPosition().first == 0) {
+            end = true;
+            return;
+        }
         board.lock(piece);
         board.clear_if_fill(piece->getPosition().first, TetrisMatrix);
-        
-
 
         piece->default_state();
         if(factory.isEmpty()) factory.fill_stack();
@@ -136,6 +141,7 @@ void Game::tick() {
         alreadyHeld = false;
     }
 }
+
 void Game::printBoard() {
     auto Board_copy = board.getBoardCopy();
     std::cout << Board_copy.at(0).size() << std::endl;
