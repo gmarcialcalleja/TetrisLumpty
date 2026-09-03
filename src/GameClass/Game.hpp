@@ -19,8 +19,8 @@ private:
     bool alreadyHeld;
     int level;
     sf::RectangleShape shape;
+    bool gameOver;
     ScoreTracker score;
-    bool end;
     std::vector<sf::Color> colors{
         sf::Color::Transparent, sf::Color::Red, sf::Color::Yellow, sf::Color::Cyan,
         sf::Color::White, sf::Color::Blue, sf::Color::Magenta, sf::Color::Green
@@ -31,7 +31,7 @@ private:
         33279, 33279, 33279, 33279, 33279, 33279, 33279, 33279, 33279, 33279, 16639    
     };
 public:
-    Game() : factory(), piece(factory.load_next_piece()), alreadyHeld(false), level(0), shape(sf::Vector2f(38.f,38.f)){
+    Game() : factory(), piece(factory.load_next_piece()), alreadyHeld(false), level(0), gameOver(false), shape(sf::Vector2f(38.f,38.f)){
         board.attach_observer(&score);
         shape.setOutlineThickness(2.f);
         shape.setFillColor( sf::Color::Transparent );
@@ -45,9 +45,10 @@ public:
     void move(std::string move);
     void rotateClockwise();
     void hold();
-    bool isOver() {return end;}
+    bool isOver() {return gameOver;}
     void drop();
     void renderHold(sf::RenderWindow& window) ;
+    void setOver() {gameOver = true;}
     // add member variables of Concrete Observors
     // add a getscore ig to call in main and render
 };
@@ -129,7 +130,7 @@ void Game::tick() {
         piece->down(); // execute
     } else {
         if(piece->getPosition().first == 0) {
-            end = true;
+            gameOver = true;
             return;
         }
         board.lock(piece);
