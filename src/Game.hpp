@@ -17,6 +17,7 @@ private:
     std::shared_ptr<Tetromino> piece;
     bool alreadyHeld;
     int level;
+    sf::RectangleShape shape;
     ScoreTracker score;
     std::vector<sf::Color> colors{
         sf::Color::Transparent, sf::Color::Red, sf::Color::Yellow, sf::Color::Cyan,
@@ -28,26 +29,29 @@ private:
         33279, 33279, 33279, 33279, 33279, 33279, 33279, 33279, 33279, 33279, 16639    
     };
 public:
-    Game() : factory(), piece(factory.load_next_piece()), alreadyHeld(false), level(0) {
+    Game() : factory(), piece(factory.load_next_piece()), alreadyHeld(false), level(0), shape(sf::Vector2f(38.f,38.f)){
         board.attach_observer(&score);
+        shape.setOutlineThickness(2.f);
+        shape.setFillColor( sf::Color::Transparent );
+        shape.setOutlineColor(sf::Color::White);
     }
     const std::array<std::pair<int, int>, 4>& getPieceMatrix();
     void tick();
     int32_t getTickSpeed() {return levels_array.at(level);}
     void printBoard();
-    void renderBoard(sf::RenderWindow& window, sf::RectangleShape& shape);
+    void renderBoard(sf::RenderWindow& window);
     void move(std::string move);
     void rotateClockwise();
     void hold();
     void drop();
-    void renderHold(sf::RenderWindow& window, sf::RectangleShape& shape) ;
+    void renderHold(sf::RenderWindow& window) ;
     // add member variables of Concrete Observors
     // add a getscore ig to call in main and render
 };
 //--------------------------------------------------------------------------------------------------
 
 
-void Game::renderBoard(sf::RenderWindow& window, sf::RectangleShape& shape) {
+void Game::renderBoard(sf::RenderWindow& window) {
     shape.setOutlineThickness(2.f);
     auto Board_copy = board.getBoardCopy();
     auto TetrisMatrix = getPieceMatrix();
@@ -65,7 +69,7 @@ void Game::renderBoard(sf::RenderWindow& window, sf::RectangleShape& shape) {
     }
 }
 
-void Game::renderHold(sf::RenderWindow& window, sf::RectangleShape& shape) {
+void Game::renderHold(sf::RenderWindow& window) {
     std::vector<std::vector<ShapeType>> mini_matrix = std::vector(4, std::vector<ShapeType>(4, ShapeType::Empty));
     if(factory.show_held_piece() == nullptr) return;
     Tetromino held_piece(static_cast<int>(factory.show_held_piece()->getType()));
