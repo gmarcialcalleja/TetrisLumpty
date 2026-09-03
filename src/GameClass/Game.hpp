@@ -6,7 +6,7 @@
 #include <SFML/Graphics.hpp>
 #include "ShapeDatabase.hpp"
 #include "Board.hpp"
-#include "ScoreTracker.hpp"
+#include "./Observer/ScoreTracker.hpp"
 #include "Tetromino.hpp"
 #include "Factory.hpp"
 

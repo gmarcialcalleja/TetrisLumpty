@@ -1,16 +1,13 @@
 #pragma once
 #include <vector>
-#include "Tetromino.hpp"
-#include "ShapeDatabase.hpp"
-#include "IObserver.hpp"
-#include "Subject.hpp"
 #include <memory>
 #include <algorithm>
 #include <array>
 #include <unordered_set>
-#pragma once
-#include "IObserver.hpp"
-#include <memory>
+#include "Tetromino.hpp"
+#include "ShapeDatabase.hpp"
+#include "./Observer/IObserver.hpp"
+#include "./Observer/Subject.hpp"
 
 class Board : public Subject{ 
 private:
