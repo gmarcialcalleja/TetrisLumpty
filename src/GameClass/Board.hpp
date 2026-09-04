@@ -83,7 +83,7 @@ bool Board::isDropValid(const std::shared_ptr<Tetromino>& piece) {
     return true;
 }
 bool Board::isValid(int y_next, int x_next) {
-    if(x_next >= num_cols() || x_next < 0 || y_next >= num_rows() || board.at(y_next).at(x_next) != ShapeType::Empty) {
+    if(x_next >= num_cols() || x_next < 0 || y_next >= num_rows() || y_next < 0 || board.at(y_next).at(x_next) != ShapeType::Empty) {
         return false;
     }
     return true;

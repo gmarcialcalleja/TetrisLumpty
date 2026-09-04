@@ -156,11 +156,8 @@ void Game::rotateClockwise() {
     // define a bunch of predefined positions
     // get the right position vector based off rotation, I's a special case ig
     // pass in the rotation and the piece
-    if(board.isCWValid(piece)) {
-        piece->rotateClockwise();
-        return;
-    }
     const auto& positions = ShapeDatabase::getKick(piece->getType(), piece->getRotation());
+    std::cout << piece->getPosition().first<< " " << piece->getPosition().second << std::endl;
 
     for(const auto& position: positions) {
         std::pair<int,int> pos = {position.first + piece->getPosition().first, position.second + piece->getPosition().second};
@@ -168,7 +165,7 @@ void Game::rotateClockwise() {
             piece->setPosition(pos);
             piece->rotateClockwise();
             break;
-        }
+        } 
     // if board.isCWValid(piece, position) piece.setPosition(position), piece->rotateCW();
     }
 }
