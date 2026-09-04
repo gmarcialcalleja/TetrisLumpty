@@ -110,11 +110,10 @@ void Game::hold() {
 }
 
 void Game::drop() {
-    auto TetrisMatrix = getPieceMatrix();
-    while(board.isDropValid(TetrisMatrix, piece->getPosition()))
+    while(board.isDropValid(piece))
         piece->down(); // execute
     board.lock(piece);
-    board.clear_if_fill(piece->getPosition().first, TetrisMatrix);
+    board.clear_if_fill(piece->getPosition().first, getPieceMatrix());
 
     // if there is a line clear then in the board array, we want to like
     // clear the vector where the line is, then js move everything down 1
@@ -126,8 +125,7 @@ void Game::drop() {
 }
 void Game::tick() {
     //calculate next state Matrix
-    auto TetrisMatrix = getPieceMatrix();
-    if(board.isDropValid(TetrisMatrix, piece->getPosition())) {
+    if(board.isDropValid(piece)) {
         piece->down(); // execute
     } else {
         if(piece->getPosition().first == 0) {
@@ -135,7 +133,7 @@ void Game::tick() {
             return;
         }
         board.lock(piece);
-        board.clear_if_fill(piece->getPosition().first, TetrisMatrix);
+        board.clear_if_fill(piece->getPosition().first, getPieceMatrix());
 
         piece->default_state();
         if(factory.isEmpty()) factory.fill_stack();
@@ -150,14 +148,14 @@ void Game::printBoard() {
 }
 
 void Game::move(std::string move) {
-    auto TetrisMatrix = getPieceMatrix();
-    if(board.isMoveValid(TetrisMatrix, piece->getPosition(), move)) {
+    if(board.isMoveValid(piece, move)) {
         piece->move(move);
     }
 }
 void Game::rotateClockwise() {
-    auto TetrisMatrix = ShapeDatabase::getMatrix(piece->getType(), (piece->getRotation()+1)%4);
-    if(board.isCWValid(TetrisMatrix, piece->getPosition())) 
-        //add wall kick mechanics
+    if(board.isCWValid(piece)) 
+        //add wall kick mechanics might have to pass in the piece or rotations idk
+        // then if this fails we'd have to send in multiple matrices nad if we found a working positino
+        // we'll have to change piece position to that working rotation then call piece->rotate
         piece->rotateClockwise();
 }
