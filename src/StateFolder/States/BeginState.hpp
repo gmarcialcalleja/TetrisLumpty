@@ -2,23 +2,23 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include "../../GameClass/Game.hpp"
+#include <iostream>
 
-class GameOverState : public IGameState {
-private: 
+class BeginState : public IGameState {
+private:
     bool next_state;
-public: 
-    GameOverState(): next_state(false) {}
-    void handleEvent(const sf::Event::KeyPressed* key) override {
+public:
+    BeginState() : next_state(false) {}
+    void handleEvent(const sf::Event::KeyPressed* key){
         if (key->code == sf::Keyboard::Key::Enter) next_state = true;
-    }
-	void update(GameStateManager& manager) override {
-        //manager . transition state ig;
+    };
+	void update(GameStateManager& manager) {
         if(next_state) {
             next_state = false;
-            manager.TransitionState(0);
+            manager.TransitionState(1);
         }
-    }
-	void render(sf::RenderWindow& window) override {
+    };
+	void render(sf::RenderWindow& window){
         static sf::Font font;
         static bool fontLoaded = false;
 
@@ -28,8 +28,8 @@ public:
         if (!fontLoaded) return;
 
         // "Start Game" Text
-        sf::Text startText(font, "Game Over", 250);
-        startText.setFillColor(sf::Color::Red);
+        sf::Text startText(font, "Start Game", 250);
+        startText.setFillColor(sf::Color::Cyan);
         startText.setPosition({100.f,100.f});
         window.draw(startText);
     }

@@ -1,6 +1,4 @@
 #pragma once
-#include <vector>
-#include <memory>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include "../../GameClass/Game.hpp"
@@ -16,6 +14,7 @@ public:
 		if (key->code == sf::Keyboard::Key::Down)  game.tick();
 		if (key->code == sf::Keyboard::Key::LShift)  game.hold();
 		if (key->code == sf::Keyboard::Key::Space)  game.drop();
+		if (key->code == sf::Keyboard::Key::Escape)  game.setOver(true);
 	}
 	void update(GameStateManager& manager) override  {
 		if(manager.getTime() > game.getTickSpeed()) {
@@ -23,7 +22,9 @@ public:
 			manager.restartClock();
 		}
 		if(game.isOver()) {
-            manager.TransitionState(1);
+			game.resetBoard();
+			game.setOver(false);
+            manager.TransitionState(2);
         }
 	}
 

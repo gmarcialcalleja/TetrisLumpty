@@ -47,8 +47,9 @@ public:
     void hold();
     bool isOver() {return gameOver;}
     void drop();
+    void resetBoard() {board.reset();}
     void renderHold(sf::RenderWindow& window) ;
-    void setOver() {gameOver = true;}
+    void setOver(bool var) {gameOver = var;}
     // add member variables of Concrete Observors
     // add a getscore ig to call in main and render
 };
@@ -130,7 +131,7 @@ void Game::tick() {
         piece->down(); // execute
     } else {
         if(piece->getPosition().first == 0) {
-            gameOver = true;
+            setOver(true);
             return;
         }
         board.lock(piece);
@@ -157,5 +158,6 @@ void Game::move(std::string move) {
 void Game::rotateClockwise() {
     auto TetrisMatrix = ShapeDatabase::getMatrix(piece->getType(), (piece->getRotation()+1)%4);
     if(board.isCWValid(TetrisMatrix, piece->getPosition())) 
+        //add wall kick mechanics
         piece->rotateClockwise();
 }

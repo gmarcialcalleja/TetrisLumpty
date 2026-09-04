@@ -3,6 +3,7 @@
 #include <SFML/System.hpp>
 #include "./StateFolder/GameStateManager.hpp"
 #include "./StateFolder/States/PlayingGameState.hpp"
+#include "./StateFolder/States/BeginState.hpp"
 #include "./StateFolder/States/GameOverState.hpp"
 
 
@@ -10,9 +11,11 @@
 int main()
 {
 	sf::RenderWindow window( sf::VideoMode( { 1500, 1600 } ), "SFML works!" );
-	std::unique_ptr<GameOverState> end = std::make_unique<GameOverState>();
+	std::unique_ptr<BeginState> begin = std::make_unique<BeginState>();
 	std::unique_ptr<PlayingGameState> play = std::make_unique<PlayingGameState>();
+	std::unique_ptr<GameOverState> end = std::make_unique<GameOverState>();
 	std::vector<std::unique_ptr<IGameState>> states;
+	states.push_back(std::move(begin));
 	states.push_back(std::move(play));
 	states.push_back(std::move(end));
 	GameStateManager manager(std::move(states));

@@ -29,8 +29,7 @@ public:
     bool isCWValid(const std::array<std::pair<int, int>, 4>& TetrisMatrix, const std::pair<int,int>& position);
     void clear_if_fill(int x_pos, const std::array<std::pair<int, int>, 4>& TetrisMatrix);
     void clear_rows(const std::vector<int>& rows);
-    void shift_lines_down(int min, int max, int size);
-
+    void reset() {board = std::vector(20, std::vector<ShapeType>(10, ShapeType::Empty));}
     
     
 };
