@@ -57,6 +57,23 @@ namespace ShapeDatabase {
                 {{{0,2},{1,2},{2,2},{3,2}}}  // rotation 3 — same as rotation 1
             }}
         };
+        const std::vector<std::array<std::pair<int, int>, 5>> jlstz_kick = {
+            {{{0, 0}, {0, -1}, {1, -1}, {-2, 0}, {-2, -1}}}, // rotation 0
+            {{{0, 0}, {0, 1}, {-1, 1}, {2, 0}, {2, 1}}}, // rotation 1
+            {{{0, 0}, {0, 1}, {1, 1}, {-2, 0}, {-2, 1}}}, // rotation 2
+            {{{0, 0}, {0, -1}, {-1, -1}, {2, 0}, {2, -1}}}  // rotation 3  
+        };
+        const std::vector<std::array<std::pair<int, int>, 5>> Ikick = {
+            {{{0, 0}, {0, -2}, {0, 1}, {-1, -2}, {2, 1}}}, // rotation 0
+            {{{0, 0}, {0, -1}, {0, 2}, {2, -1}, {-1, 2}}}, // rotation 1
+            {{{0, 0}, {0, 2}, {0, -1}, {1, 2}, {-2, -1}}}, // rotation 2
+            {{{0, 0}, {0, 1}, {0, -2}, {-2, 1}, {1, -2}}}  // rotation 3  
+        };
     }
     [[nodiscard]]static const Matrix& getMatrix(ShapeType type, int rotation) {return detail::database.at(detail::hash(type)).at(rotation);}
+    [[nodiscard]]static const std::array<std::pair<int, int>, 5>& getKick(ShapeType type, int rotation) {
+        if(type != ShapeType::I) 
+            return detail::jlstz_kick.at(rotation);
+        return detail::Ikick.at(rotation);
+    }
 }

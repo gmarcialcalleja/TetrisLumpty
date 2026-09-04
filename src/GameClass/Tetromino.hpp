@@ -13,6 +13,7 @@ public:
     Tetromino(int type_) : type(static_cast<ShapeType>(type_)), rotation(0), position({0,4}) {}
     const ShapeType& getType() {return type;}
     const int& getRotation() {return rotation;}
+    void setPosition(std::pair<int,int> position_) {position = position_;}
     const std::pair<int,int>& getPosition() {return position;}
     void down() {position.first++;}
     

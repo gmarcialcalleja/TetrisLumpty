@@ -26,9 +26,10 @@ public:
     
     bool isValid(int y_next, int x_next);
     bool isCWValid(const std::shared_ptr<Tetromino>& piece);
+    bool isCWValid(const std::shared_ptr<Tetromino>& piece, const std::pair<int,int>& position);
     bool isMoveValid(const std::shared_ptr<Tetromino>& piece, std::string move);
     bool isDropValid(const std::shared_ptr<Tetromino>& piece);
-    
+
     void clear_if_fill(int x_pos, const std::array<std::pair<int, int>, 4>& TetrisMatrix);
     void clear_rows(const std::vector<int>& rows);
     void reset() {board = std::vector(20, std::vector<ShapeType>(10, ShapeType::Empty));}
@@ -82,7 +83,6 @@ bool Board::isDropValid(const std::shared_ptr<Tetromino>& piece) {
     return true;
 }
 bool Board::isValid(int y_next, int x_next) {
-    
     if(x_next >= num_cols() || x_next < 0 || y_next >= num_rows() || board.at(y_next).at(x_next) != ShapeType::Empty) {
         return false;
     }
@@ -105,6 +105,15 @@ bool Board::isMoveValid(const std::shared_ptr<Tetromino>& piece, std::string mov
 bool Board::isCWValid(const std::shared_ptr<Tetromino>& piece) {
     auto TetrisMatrix = ShapeDatabase::getMatrix(piece->getType(), (piece->getRotation()+1)%4);
     const std::pair<int,int>& position = piece->getPosition();
+    for(const auto& [first,second] : TetrisMatrix) {
+        int x_next = second + position.second;
+        int y_next = first + position.first;
+        if(!isValid(y_next,x_next)) return false;
+    }
+    return true;
+}
+bool Board::isCWValid(const std::shared_ptr<Tetromino>& piece, const std::pair<int,int>& position) {
+    auto TetrisMatrix = ShapeDatabase::getMatrix(piece->getType(), (piece->getRotation()+1)%4);
     for(const auto& [first,second] : TetrisMatrix) {
         int x_next = second + position.second;
         int y_next = first + position.first;

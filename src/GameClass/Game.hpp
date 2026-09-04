@@ -153,9 +153,22 @@ void Game::move(std::string move) {
     }
 }
 void Game::rotateClockwise() {
-    if(board.isCWValid(piece)) 
-        //add wall kick mechanics might have to pass in the piece or rotations idk
-        // then if this fails we'd have to send in multiple matrices nad if we found a working positino
-        // we'll have to change piece position to that working rotation then call piece->rotate
+    // define a bunch of predefined positions
+    // get the right position vector based off rotation, I's a special case ig
+    // pass in the rotation and the piece
+    if(board.isCWValid(piece)) {
         piece->rotateClockwise();
+        return;
+    }
+    const auto& positions = ShapeDatabase::getKick(piece->getType(), piece->getRotation());
+
+    for(const auto& position: positions) {
+        std::pair<int,int> pos = {position.first + piece->getPosition().first, position.second + piece->getPosition().second};
+        if(board.isCWValid(piece,pos)) {
+            piece->setPosition(pos);
+            piece->rotateClockwise();
+            break;
+        }
+    // if board.isCWValid(piece, position) piece.setPosition(position), piece->rotateCW();
+    }
 }

@@ -54,6 +54,7 @@ void TetrisFactory::fill_stack() {
 }
 
 std::shared_ptr<Tetromino> TetrisFactory::load_next_piece() {
+    if(stack.empty()) fill_stack();
     std::shared_ptr<Tetromino> piece = stack.top();
     stack.pop();
     return piece;
