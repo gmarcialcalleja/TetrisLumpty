@@ -43,7 +43,6 @@ public:
     void printBoard();
     void renderBoard(sf::RenderWindow& window);
     void move(std::string move);
-    void rotateClockwise();
     void hold();
     bool isOver() {return gameOver;}
     void drop();
@@ -96,10 +95,7 @@ void Game::renderHold(sf::RenderWindow& window) {
 const std::array<std::pair<int, int>, 4>& Game::getPieceMatrix() {
     return ShapeDatabase::getMatrix(piece->getType(), piece->getRotation());
 }
-//save the current piece
-//set piece to held piece
-//if theres no held piece we js load_next_piece
-//if we already held a piece we cant hold again in the same turn
+
 void Game::hold() {
     if(alreadyHeld) return;
     piece->default_state();
@@ -151,18 +147,6 @@ void Game::move(std::string move) {
         piece->move(move);
     }
 }
-void Game::rotateClockwise() {
-    const auto& positions = ShapeDatabase::getKick(piece->getType(), piece->getRotation(), "CW");
-
-    for(const auto& position: positions) {
-        std::pair<int,int> pos = {position.first + piece->getPosition().first, position.second + piece->getPosition().second};
-        if(board.isRotateValid(piece,pos,"CW")) {
-            piece->setPosition(pos);
-            piece->rotateClockwise();
-            break;
-        } 
-    }
-}
 
 void Game::rotate(const std::string& rotation_type) {
     const auto& positions = ShapeDatabase::getKick(piece->getType(), piece->getRotation(), rotation_type);
@@ -176,6 +160,3 @@ void Game::rotate(const std::string& rotation_type) {
         } 
     }
 }
-
-//adding CCW rotations shouldn't be hard it should be as simple as adding 3 to the modulus
-// and adding a bunch of like small changes

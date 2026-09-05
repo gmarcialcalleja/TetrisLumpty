@@ -90,6 +90,7 @@ namespace ShapeDatabase {
     }
     [[nodiscard]]static const Matrix& getMatrix(ShapeType type, int rotation) {return detail::database.at(detail::hash(type)).at(rotation);}
     [[nodiscard]]static const std::array<std::pair<int, int>, 5>& getKick(ShapeType type, int rotation, const std::string& rotation_type) {
+        //returns CW kick table or CCW kick table
         if(type != ShapeType::I) 
             return (rotation_type == "CW") ? detail::jlstz_kick_CW.at(rotation) : detail::jlstz_kick_CCW.at(rotation)  ;
         return (rotation_type == "CW") ? detail::IKick_CW.at(rotation) : detail::IKick_CCW.at(rotation);
