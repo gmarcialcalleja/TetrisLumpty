@@ -50,8 +50,7 @@ public:
     void resetBoard() {board.reset();}
     void renderHold(sf::RenderWindow& window) ;
     void setOver(bool var) {gameOver = var;}
-    // add member variables of Concrete Observors
-    // add a getscore ig to call in main and render
+    void rotate(const std::string& rotate);
 };
 //--------------------------------------------------------------------------------------------------
 
@@ -153,18 +152,30 @@ void Game::move(std::string move) {
     }
 }
 void Game::rotateClockwise() {
-    // define a bunch of predefined positions
-    // get the right position vector based off rotation, I's a special case ig
-    // pass in the rotation and the piece
-    const auto& positions = ShapeDatabase::getKick(piece->getType(), piece->getRotation());
+    const auto& positions = ShapeDatabase::getKick(piece->getType(), piece->getRotation(), "CW");
 
     for(const auto& position: positions) {
         std::pair<int,int> pos = {position.first + piece->getPosition().first, position.second + piece->getPosition().second};
-        if(board.isCWValid(piece,pos)) {
+        if(board.isRotateValid(piece,pos,"CW")) {
             piece->setPosition(pos);
             piece->rotateClockwise();
             break;
         } 
-    // if board.isCWValid(piece, position) piece.setPosition(position), piece->rotateCW();
     }
 }
+
+void Game::rotate(const std::string& rotation_type) {
+    const auto& positions = ShapeDatabase::getKick(piece->getType(), piece->getRotation(), rotation_type);
+
+    for(const auto& position: positions) {
+        std::pair<int,int> pos = {position.first + piece->getPosition().first, position.second + piece->getPosition().second};
+        if(board.isRotateValid(piece,pos, rotation_type)) {
+            piece->setPosition(pos);
+            piece->rotate(rotation_type);
+            break;
+        } 
+    }
+}
+
+//adding CCW rotations shouldn't be hard it should be as simple as adding 3 to the modulus
+// and adding a bunch of like small changes

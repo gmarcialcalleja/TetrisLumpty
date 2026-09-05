@@ -10,7 +10,8 @@ public:
 	void handleEvent(const sf::Event::KeyPressed* key) {
 		if (key->code == sf::Keyboard::Key::Left)  game.move("left");
 		if (key->code == sf::Keyboard::Key::Right) game.move("right");
-		if (key->code == sf::Keyboard::Key::Up)    game.rotateClockwise();
+		if (key->code == sf::Keyboard::Key::Up)    game.rotate("CW");
+		if (key->code == sf::Keyboard::Key::Z)    game.rotate("CCW");
 		if (key->code == sf::Keyboard::Key::Down)  game.tick();
 		if (key->code == sf::Keyboard::Key::LShift)  game.hold();
 		if (key->code == sf::Keyboard::Key::Space)  game.drop();

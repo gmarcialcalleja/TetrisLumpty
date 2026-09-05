@@ -19,6 +19,8 @@ public:
     
     void move(std::string move);
     void rotateClockwise();
+    void rotate(const std::string& rotation_type);
+
     void default_state();
     //send next state
 };
@@ -26,6 +28,11 @@ public:
 void Tetromino::move(std::string move) {
     if(move == "right") position.second++;
     else position.second--;
+}
+void Tetromino::rotate(const std::string& rotation_type) {
+    int offset = (rotation_type == "CW") ? 1 : 3;
+    rotation = (rotation + offset) % 4;
+
 }
 void Tetromino::rotateClockwise() {
     rotation = (rotation + 1) % 4;
