@@ -157,7 +157,6 @@ void Game::rotateClockwise() {
     // get the right position vector based off rotation, I's a special case ig
     // pass in the rotation and the piece
     const auto& positions = ShapeDatabase::getKick(piece->getType(), piece->getRotation());
-    std::cout << piece->getPosition().first<< " " << piece->getPosition().second << std::endl;
 
     for(const auto& position: positions) {
         std::pair<int,int> pos = {position.first + piece->getPosition().first, position.second + piece->getPosition().second};

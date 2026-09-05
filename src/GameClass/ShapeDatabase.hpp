@@ -47,15 +47,15 @@ namespace ShapeDatabase {
             {{// Z
                 {{{0,0},{0,1},{1,1},{1,2}}}, // rotation 0
                 {{{0,2},{1,1},{1,2},{2,1}}}, // rotation 1
-                {{{0,0},{0,1},{1,1},{1,2}}}, // rotation 2 — same as rotation 0
-                {{{0,2},{1,1},{1,2},{2,1}}}  // rotation 3 — same as rotation 1
+                {{{1,0},{1,1},{2,1},{2,2}}}, // rotation 2 
+                {{{0,1},{1,0},{1,1},{2,0}}}  // rotation 3 
             }},
             {{// I
-                {{{1,0},{1,1},{1,2},{1,3}}}, // rotation 0 (horizontal)
-                {{{0,2},{1,2},{2,2},{3,2}}}, // rotation 1 (vertical)
-                {{{1,0},{1,1},{1,2},{1,3}}}, // rotation 2 — same as rotation 0
-                {{{0,2},{1,2},{2,2},{3,2}}}  // rotation 3 — same as rotation 1
-            }}
+                {{{1,0},{1,1},{1,2},{1,3}}}, // rotation 0 (horizontal, row 1)
+                {{{0,2},{1,2},{2,2},{3,2}}}, // rotation 1 (vertical, col 2)
+                {{{2,0},{2,1},{2,2},{2,3}}}, // rotation 2 (horizontal, row 2)
+                {{{0,1},{1,1},{2,1},{3,1}}}  // rotation 3 (vertical, col 1)
+            }},
         };
         const std::vector<std::array<std::pair<int, int>, 5>> jlstz_kick = {
             {{{0, 0}, {0, -1}, {1, -1}, {-2, 0}, {-2, -1}}}, // rotation 0
@@ -64,10 +64,10 @@ namespace ShapeDatabase {
             {{{0, 0}, {0, 1}, {-1, -1}, {2, 0}, {2, -1}}}  // rotation 3  
         };
         const std::vector<std::array<std::pair<int, int>, 5>> Ikick = {
-            {{{0, 0}, {0, -2}, {0, 1}, {-1, -2}, {2, 1}}}, // rotation 0
-            {{{0, 0}, {0, -1}, {0, 2}, {2, -1}, {-1, 2}}}, // rotation 1
-            {{{0, 0}, {0, 2}, {0, -1}, {1, 2}, {-2, -1}}}, // rotation 2
-            {{{0, 0}, {0, 2}, {0, -2}, {2, 1}, {-1, -2}}}  // rotation 3  
+            {{{0, 0}, {0, -2}, {0, 1}, {1, -2}, {-2, 1}}}, // 0->R
+            {{{0, 0}, {0, -1}, {0, 2}, {-2, -1}, {1, 2}}}, // R->2
+            {{{0, 0}, {0, 2}, {0, -1}, {-1, 2}, {2, -1}}}, // 2->L
+            {{{0, 0}, {0, 1}, {0, -2}, {2, 1}, {-1, -2}}}  // L->0 (Tests: x+2 y+1, x-1 y-2)
         };
     }
     [[nodiscard]]static const Matrix& getMatrix(ShapeType type, int rotation) {return detail::database.at(detail::hash(type)).at(rotation);}
